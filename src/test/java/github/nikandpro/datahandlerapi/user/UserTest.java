@@ -24,6 +24,7 @@ public class UserTest {
     private UserService userService;
 
     public final int size = 100000;
+    public final int time_wait = 1000;
 
 
     @Test
@@ -55,7 +56,7 @@ public class UserTest {
         }
 
         for (Future<Long> f : futures) {
-            array.add(f.get(1000, TimeUnit.MILLISECONDS));
+            array.add(f.get(time_wait, TimeUnit.MILLISECONDS));
         }
 
 
