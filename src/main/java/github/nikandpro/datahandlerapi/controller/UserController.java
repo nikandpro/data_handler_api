@@ -22,7 +22,7 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable long id) {
         userService.deleteById(id);
     }
