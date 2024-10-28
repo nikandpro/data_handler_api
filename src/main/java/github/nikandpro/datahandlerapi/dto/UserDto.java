@@ -1,6 +1,6 @@
 package github.nikandpro.datahandlerapi.dto;
 
 public record UserDto(
-        int id,
+        Long id,
         String username
 ) {}

@@ -1,6 +1,5 @@
 package github.nikandpro.datahandlerapi.user;
 
-import github.nikandpro.datahandlerapi.dto.UserDto;
 import github.nikandpro.datahandlerapi.entity.User;
 import github.nikandpro.datahandlerapi.repository.UserRepository;
 import github.nikandpro.datahandlerapi.service.UserService;
@@ -24,35 +23,39 @@ public class UserTest {
     @Autowired
     private UserService userService;
 
+    public final int size = 100000;
+
+
     @Test
-    public void saveUsers() {
-        List<User> users = IntStream.range(0, 100)
+    public void fillingUsers() {
+        List<User> users = IntStream.range(0, size)
                 .mapToObj(i -> new User("user" + i))
                 .toList();
         userRepository.saveAll(users);
     }
 
+
     @Test
     public void getUsers() throws ExecutionException, InterruptedException, TimeoutException {
         List<Long> array = new ArrayList<>();
         List<CompletableFuture<Long>> futures = new ArrayList<>();
-        ExecutorService executorService = Executors.newFixedThreadPool(100);
-        for (int i = 0; i < 100; i++) {
+
+        for (int i = 0; i < size; i++) {
 
             CompletableFuture<Long> f = CompletableFuture.supplyAsync(() -> {
-                        long start = System.currentTimeMillis();
+                long start = System.currentTimeMillis();
 
-                        long randomId = ThreadLocalRandom.current().nextLong(100000);
-                        userRepository.findById(randomId);
+                long randomId = ThreadLocalRandom.current().nextLong(size);
+                userService.findById(randomId);
 
-                        long end = System.currentTimeMillis();
-                        return end - start;
-                    });
+                long end = System.currentTimeMillis();
+                return end - start;
+            });
             futures.add(f);
         }
 
         for (Future<Long> f : futures) {
-            array.add(f.get(500, TimeUnit.MILLISECONDS));
+            array.add(f.get(1000, TimeUnit.MILLISECONDS));
         }
 
 
